@@ -4,9 +4,9 @@ This repository contains code developed under Node.js for the purpose of showcas
 
 # How to run
 
-1. Use the BotFather bot in Telegram and create a new bot using the /newborn command.
+1. Use the BotFather bot in Telegram and create a new bot using the `/newborn` command.
 
-2.Copy the API token provided.
+2. Copy the API token provided.
 
 3. Clone the code and host it somewhere.
 
