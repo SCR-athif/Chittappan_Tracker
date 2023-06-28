@@ -1,22 +1,21 @@
 # Chittappan-Tracker
 
-Hi all this code is developed under node.js for POC showcase purpose which how a unfimilliar link effect your day today life or privacy.
+This repository contains code developed under Node.js for the purpose of showcasing how an unfamiliar link can affect your daily life or privacy.
 
-#How to make it run
+# How to run
 
-1. use botfather bot in telegram and create a bot using /newborn command
+1. Use the BotFather bot in Telegram and create a new bot using the /newborn command.
 
-2. copy api token
+2.Copy the API token provided.
 
-3. clone the code and host it somewhere
+3. Clone the code and host it somewhere.
 
-4. change the token in parameter 'mysecret'
+4. Replace the 'mysecret' parameter with your copied API token.
 
-#Bot commands
+# Bot commands
 
-1. /start to start
-2. /help for help
-3. /create
-type a link which vulnerable to clickjacking 
+1. `/start`- Start the bot.
+2. `/help` - Get help and instructions.
+3. `/create` - Type a link that is vulnerable to clickjacking.
 
-then you will get a link which for victim send that to a victim and see the reply from the bot 
+Once you provide a vulnerable link using the `/create` command, the bot will generate a new link. Send this generated link to a victim and observe the reply from the bot.
