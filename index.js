@@ -16,7 +16,7 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 //Modify your URL here
-var hostURL = "https://chittappantracker.mohammedathif.repl.co";
+var hostURL = "https://your_url.com";
 //TOGGLE for 1pt Proxy and Shorters
 var use1pt = false;
 
